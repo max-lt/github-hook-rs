@@ -1,3 +1,5 @@
+mod script;
+
 use actix_web::web::Bytes;
 use actix_web::web::Data;
 use actix_web::web::Path;
@@ -60,7 +62,7 @@ async fn github_hook(
             }
         };
 
-        log::debug!("Received a GitHub hook for project: \"{project_id}\" with signature {gh_sig}");
+        log::debug!("Received signature: {gh_sig}");
 
         let hash: String = {
             let mut mac = HmacSha256::new_from_slice(config.secret.as_bytes()).unwrap();
@@ -108,24 +110,9 @@ async fn github_hook(
         }
     }
 
-    run_script(config.script.clone());
+    script::run_script(config.script.clone());
 
     HttpResponse::Ok().body("ok")
-}
-
-fn run_script(script: String) {
-    log::info!("Running script: {}", script);
-
-    std::thread::spawn(move || {
-        match subprocess::Exec::shell(script).capture() {
-            Ok(out) => {
-                log::info!("Script output: {}", out.stdout_str());
-            }
-            Err(e) => {
-                log::error!("Error running script: {}", e);
-            }
-        }
-    });
 }
 
 #[actix_web::main]
