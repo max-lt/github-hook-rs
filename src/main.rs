@@ -117,6 +117,11 @@ async fn github_hook(
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    if std::env::args().any(|a| a == "--version") {
+        println!("v{}", VERSION);
+        return Ok(());
+    }
+
     if !std::env::var("RUST_LOG").is_ok() {
         std::env::set_var("RUST_LOG", "github_hook_rs=debug");
     }
