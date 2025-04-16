@@ -2,3 +2,5 @@
 
 example.yml
 example.sh
+
+*.DS_Store
