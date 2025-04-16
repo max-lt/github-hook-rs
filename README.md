@@ -64,7 +64,7 @@ Description=Github Webhook Server
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/github-hook-rs
+ExecStart=/usr/local/bin/github-hook
 Restart=always
 # Restart service after 10 seconds if node service crashes
 RestartSec=10
